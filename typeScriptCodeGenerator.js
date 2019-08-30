@@ -589,15 +589,17 @@ class TypeScriptCodeGenerator {
                 // return statement
                 if (returnParam) {
                     var returnType = this.getType(returnParam);
-                    if (returnType === "bool") {
-                        codeWriter.writeLine("return False;");
+                    if (returnType === "bool" ||
+                        returnType === "boolean") {
+                        codeWriter.writeLine("return false;");
                     } else if (returnType === "byte" ||
                         returnType === "int" ||
                         returnType === "sbyte" ||
                         returnType === "short" ||
                         returnType === "uint" ||
                         returnType === "ulong" ||
-                        returnType === "ushort") {
+                        returnType === "ushort" ||
+                        returnType === "number") {
                         codeWriter.writeLine("return 0;");
                     } else if (returnType === "float") {
                         codeWriter.writeLine("return 0.0F;");
@@ -611,6 +613,8 @@ class TypeScriptCodeGenerator {
                         codeWriter.writeLine("return '\\0';");
                     } else if (returnType === "string") {
                         codeWriter.writeLine('return "";');
+                    } else if (returnType === "void") {
+                        //no return for void
                     } else {
                         codeWriter.writeLine("return null;");
                     }
