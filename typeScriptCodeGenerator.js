@@ -534,6 +534,8 @@ class TypeScriptCodeGenerator {
             var terms = [];
             var params = elem.getNonReturnParameters();
             var returnParam = elem.getReturnParameter();
+            // Modifiers
+            var _modifiers = this.getModifiers(elem);
 
             // doc
             var doc = elem.documentation.trim();
