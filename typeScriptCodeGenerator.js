@@ -428,6 +428,29 @@ class TypeScriptCodeGenerator {
 
         // Modifiers
         // var _modifiers = this.getModifiers(elem);
+        // (from associations)
+        var associations = app.repository.getRelationshipsOf(elem, function (rel) {
+            return (rel instanceof type.UMLAssociation);
+        });
+
+        //import dependencies
+        console.log('association length: ' + associations.length);
+        for (i = 0, len = associations.length; i < len; i++) {
+            var asso = associations[i];
+            if (asso.end1.reference === elem && asso.end2.navigable === true) {
+                this.writeDependency(codeWriter, asso.end2, options);
+                // codeWriter.writeLine();
+                console.log('assoc end1');
+            } else if (asso.end2.reference === elem && asso.end1.navigable === true) {
+                this.writeDependency(codeWriter, asso.end1, options);
+                // codeWriter.writeLine();
+                console.log('assoc end2');
+            }
+        }
+        if (this.getVisibility(elem) === "public") {
+            terms.push("export");
+        }
+
         // if (elem.operations.some(function(op) {
         //         return op.isAbstract === true;
         //     })) {
@@ -476,10 +499,6 @@ class TypeScriptCodeGenerator {
             // codeWriter.writeLine();
         }
         // (from associations)
-        var associations = app.repository.getRelationshipsOf(elem, function (rel) {
-            return (rel instanceof type.UMLAssociation);
-        });
-
         console.log('association length: ' + associations.length);
 
         for (i = 0, len = associations.length; i < len; i++) {
@@ -630,6 +649,43 @@ class TypeScriptCodeGenerator {
         }
     };
 
+    /**
+     * Write Class Denendency
+     * @param {StringWriter} codeWriter
+     * @param {type.Model} elem
+     * @param {Object} options
+     */
+
+    writeDependency(codeWriter, elem, options) {
+
+
+        var terms = [];
+        // modifiers
+        console.log('writeDep', 'Dep', elem, elem._parent instanceof type.UMLInterface);
+
+        //import {
+        terms.push("import {");
+        //Reference Class Name 
+        terms.push(elem.reference.name);
+        terms.push("} from ");
+        // dependency path
+        terms.push("\"./" /*this.getDependencyPath(elem)*/);
+
+        terms.push(elem.reference.name);
+        terms.push("\"");
+
+
+        codeWriter.writeLine(terms.join("") + ";");
+
+    };
+
+    /**
+     * TBD: return module path
+     * @param {type.Model} elem 
+     */
+    getDependencyPath(elem) {
+        return "";
+    }
     /**
      * Return type expression
      * @param {type.Model} elem
