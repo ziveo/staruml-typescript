@@ -219,6 +219,10 @@ class TypeScriptCodeGenerator {
         //     terms.push(visibility);
         // }
 
+        if (this.getVisibility(elem) === "public") {
+            terms.push("export");
+        }
+
         // Interface
         terms.push("interface");
         terms.push(elem.name);
