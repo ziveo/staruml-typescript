@@ -4,7 +4,7 @@ TypeScript Code Generator for StarUML 3
 # Installation
 You can install from URL with below UML
 ```
-https://github.com/qwin/staruml-typescript
+https://github.com/ziveo/staruml-typescript
 ```
 
 # License
